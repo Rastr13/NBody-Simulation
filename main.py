@@ -65,28 +65,34 @@ class World:
     for ac,a in enumerate(self.objs):
       for bc,b in enumerate(self.objs):
         if bc>ac: # Used to avoid double updates
-          f = (self.gravity*a.m*b.m)/((abs(a.x-b.x)**2)+(abs(a.y-b.y)**2)) # Overall force
-          xs = a.x-b.x  # X scale
-          ys = a.y-b.y  # Y scale
-          ts = abs(xs)+abs(ys) # Total Scale
-          xs /= ts # Refactor X into a multiplier
-          ys /= ts # Refactor Y into a multiplier
-          # UPDATE
-          a.xv -= (f*xs)/a.m
-          a.yv -= (f*ys)/a.m
-          b.xv += (f*xs)/b.m
-          b.yv += (f*ys)/b.m
+          if m.hypot((a.x-b.x),(a.y-b.y)) <= (abs(m.sqrt(a.m))+abs(m.sqrt(b.m))): # Merge
+            self.add((a.x+b.x)/2,(a.y+b.y)/2,a.m+b.m,((a.xv*(a.m/(a.m+b.m)))+(b.xv*(b.m/(a.m+b.m))))/2,((a.yv*(a.m/(a.m+b.m)))+(b.yv*(b.m/(a.m+b.m))))/2)
+            self.objs.pop(self.objs.index(a))
+            self.objs.pop(self.objs.index(b))
+            break
+          else:
+            f = (self.gravity*a.m*b.m)/((abs(a.x-b.x)**2)+(abs(a.y-b.y)**2)) # Overall force
+            xs = a.x-b.x  # X scale
+            ys = a.y-b.y  # Y scale
+            ts = abs(xs)+abs(ys) # Total Scale
+            xs /= ts # Refactor X into a multiplier
+            ys /= ts # Refactor Y into a multiplier
+            # UPDATE
+            a.xv -= (f*xs)/a.m
+            a.yv -= (f*ys)/a.m
+            b.xv += (f*xs)/b.m
+            b.yv += (f*ys)/b.m
     for o in self.objs:
-      o.upd()
+      o.upd() # Update positions
 
 def main():
   w = World(trail=30)
   v = Video(1920, 1080, 60)
-  for i in range(50):
-     w.add(randint(-200,200),randint(-200,200),randint(10,100))
+  for i in range(200):
+     w.add(randint(-1000,1000),randint(-500,500),1)
 
   try:
-    for i in range(900):
+    for i in range(1500):
       w.upd()
       v.write(array(w.draw(v.width, v.height)))
       print(i)
