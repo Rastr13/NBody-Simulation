@@ -11,4 +11,4 @@ This can handle multiple video streams and physics simulations simulataneously
      alt="4 circles going counter-clockwise with line trails behind them"
      style="float: left; margin-right: 10px;" />
 
-Trails can be enabled in the world options
+Trails can be enabled and controlled in the world options, along the gravity strength
