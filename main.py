@@ -90,7 +90,6 @@ def main():
       w.upd()
       v.write(array(w.draw(v.width, v.height)))
       print(i)
-      w.gravity = 1+(i/900)
   except KeyboardInterrupt:
     pass
   except:
